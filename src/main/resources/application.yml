@@ -1,0 +1,20 @@
+c1eye:
+  api-package: com.c1eye.server.api
+
+
+server:
+  port: 8080
+
+spring:
+  profiles:
+    active: dev
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        ddl-auto: none
+        format_sql: true
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: true
