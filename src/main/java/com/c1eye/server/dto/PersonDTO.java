@@ -1,6 +1,6 @@
 package com.c1eye.server.dto;
 
-import com.c1eye.server.validators.PasswordEqual;
+import com.c1eye.server.dto.validators.PasswordEqual;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 

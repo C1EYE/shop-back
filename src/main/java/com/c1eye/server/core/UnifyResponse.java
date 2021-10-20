@@ -1,5 +1,6 @@
 package com.c1eye.server.core;
 
+import com.c1eye.server.exception.CreateSuccess;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,5 +19,9 @@ public class UnifyResponse {
         this.code = code;
         this.message = message;
         this.request = request;
+    }
+
+    public static void createSuccess(int i) {
+        throw new CreateSuccess(0);
     }
 }

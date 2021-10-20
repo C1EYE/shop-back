@@ -1,4 +1,4 @@
-package com.c1eye.server.validators;
+package com.c1eye.server.dto.validators;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

@@ -1,5 +1,6 @@
 package com.c1eye.server.api.v1;
 
+import com.c1eye.server.core.interceptors.ScopeLevel;
 import com.c1eye.server.exception.http.ForbiddenException;
 import com.c1eye.server.exception.http.NotFoundException;
 import com.c1eye.server.model.Banner;
@@ -25,6 +26,7 @@ public class BannerController {
         throw new ForbiddenException(10001);
     }
 
+    @ScopeLevel
     @GetMapping("/banner/{name}")
     public Banner getByName(@PathVariable(name = "name") String name) {
         Banner banner = bannerService.getByName(name);

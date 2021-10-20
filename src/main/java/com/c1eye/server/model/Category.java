@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * @author c1eye
@@ -31,10 +32,10 @@ public class Category extends BaseEntity {
 
     private Long index;
 
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinTable(name = "coupon_category",
-//            joinColumns = @JoinColumn(name = "category_id"),
-//            inverseJoinColumns = @JoinColumn(name = "coupon_id"))
-//    private List<Coupon> couponList;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "coupon_category",
+            joinColumns = @JoinColumn(name = "category_id"),
+            inverseJoinColumns = @JoinColumn(name = "coupon_id"))
+    private List<Coupon> couponList;
 
 }
