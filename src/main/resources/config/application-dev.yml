@@ -11,3 +11,6 @@ c1eye:
   security:
     jwt-key: mmjmmj123
     token-expired-in: 86400000
+  order:
+    max-sku-limit: 99
+    pay-time-limit: 3600

@@ -3,8 +3,10 @@ package com.c1eye.server.model;
 import com.c1eye.server.util.GenericAndJson;
 import com.c1eye.server.util.ListAndJson;
 import com.c1eye.server.util.MapAndJson;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -12,6 +14,7 @@ import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author c1eye
@@ -20,6 +23,7 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter
+@Where(clause = "delete_time is null and online = 1")
 public class Sku extends BaseEntity {
     @Id
     private Long id;
@@ -48,5 +52,14 @@ public class Sku extends BaseEntity {
             return;
         }
         this.specs = GenericAndJson.objectToJson(specs);
+    }
+
+    @JsonIgnore
+    public List<String> getSpecValueList(){
+        return this.getSpecs().stream().map(Spec::getValue).collect(Collectors.toList());
+    }
+
+    public BigDecimal getActualPrice(){
+        return discountPrice == null ? this.price : this.discountPrice;
     }
 }

@@ -2,6 +2,7 @@ package com.c1eye.server.util;
 
 import com.c1eye.server.bo.PageCounter;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -23,5 +24,9 @@ public class CommonUtils {
             return true;
         }
         return false;
+    }
+    public static Calendar addSomeSeconds(Calendar calendar, int seconds){
+        calendar.add(Calendar.SECOND, seconds);
+        return calendar;
     }
 }

@@ -1,5 +1,6 @@
 c1eye:
   api-package: com.c1eye.server.api
+  year-codes: A,B,C,D,E,F,G,H,I,J,K,L
 
 
 server:
