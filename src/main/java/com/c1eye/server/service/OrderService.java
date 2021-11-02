@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +34,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -59,6 +61,9 @@ public class OrderService {
 
     @Autowired
     private IMoneyDiscount moneyDiscount;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     @Value("${c1eye.order.max-sku-limit}")
     private Long maxSkuLimit;
@@ -94,10 +99,22 @@ public class OrderService {
         //减库存
         //核销优惠券
         //加入延迟消息队列
+        Long couponId = -1L;
         if (orderDTO.getCouponId() != null) {
             this.writeOffCoupon(orderDTO.getCouponId(), order.getId(), uid);
+            couponId = orderDTO.getCouponId();
         }
+        this.sendToRedis(order.getId(), uid, couponId);
         return order.getId();
+    }
+
+    private void sendToRedis(Long oid, Long uid, Long couponId) {
+        String key = oid.toString() + "," + uid.toString() + "," + couponId.toString();
+        try {
+            stringRedisTemplate.opsForValue().set(key, "1", this.payTimeLimit, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void writeOffCoupon(Long couponId, Long oid, Long uid) {
@@ -158,6 +175,15 @@ public class OrderService {
             return orderRepository.findByUserId(uid, pageable);
         }
         return this.orderRepository.findByUserIdAndStatus(uid, status, pageable);
+    }
+
+    public void updateOrderPrepayId(Long orderId, String prePayId) {
+        Optional<Order> order = this.orderRepository.findById(orderId);
+        order.ifPresent(o -> {
+            o.setPrepayId(prePayId);
+            this.orderRepository.save(o);
+        });
+        order.orElseThrow(() -> new ParameterException(10007));
     }
 
     public Optional<Order> getOrderDetail(Long oid) {

@@ -6,6 +6,13 @@ spring:
     url: jdbc:mysql://localhost:3306/c1eye_shop?characterEncoding=utf-8&serverTimezone=GMT%2B8
     username: root
     password: mmj_MMJ_123
+#将7号数据库作为键空间通知数据库
+  redis:
+    localhost: localhost
+    port: 6379
+    database: 7
+    password:
+    listen-pattern: __keyevent@7__:expired
 
 c1eye:
   security:
@@ -13,4 +20,13 @@ c1eye:
     token-expired-in: 86400000
   order:
     max-sku-limit: 99
-    pay-time-limit: 3600
+    pay-time-limit:
+    pay-callback-host: localhost:9000
+    pay-callback-path: /v1/payment/wx/notify
+
+rocketmq:
+  producer:
+    producer-group: C1eyeProducerGroup
+  namesrv-addr: 127.0.0.1:9876
+  consumer:
+    consumer-group: C1eyeConsumerGroup

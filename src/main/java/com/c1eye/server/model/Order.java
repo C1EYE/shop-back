@@ -1,6 +1,8 @@
 package com.c1eye.server.model;
 
+import com.c1eye.server.core.enumeration.OrderStatus;
 import com.c1eye.server.dto.OrderAddressDTO;
+import com.c1eye.server.util.CommonUtils;
 import com.c1eye.server.util.GenericAndJson;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -48,24 +50,24 @@ public class Order extends BaseEntity {
 
     //充血模式 贫血模式
 
-//    @JsonIgnore
-//    public OrderStatus getStatusEnum() {
-//        return OrderStatus.toType(this.status);
-//    }
-//
-//    //
-//    public Boolean needCancel() {
-//        if (!this.getStatusEnum().equals(OrderStatus.UNPAID)) {
-//            return true;
-//        }
-//        boolean isOutOfDate = CommonUtil.isOutOfDate(this.getExpiredTime());
-//        if (isOutOfDate) {
-//            return true;
-//        }
-//        return false;
-//    }
-//
-//    //
+    @JsonIgnore
+    public OrderStatus getStatusEnum() {
+        return OrderStatus.toType(this.status);
+    }
+
+    //
+    public Boolean needCancel() {
+        if (!this.getStatusEnum().equals(OrderStatus.UNPAID)) {
+            return true;
+        }
+        boolean isOutOfDate = CommonUtils.isOutOfDate(this.getExpiredTime());
+        if (isOutOfDate) {
+            return true;
+        }
+        return false;
+    }
+
+
     public void setSnapItems(List<OrderSku> orderSkuList) {
         if (orderSkuList.isEmpty()) {
             return;

@@ -1,10 +1,11 @@
 package com.c1eye.server.repository;
 
-import com.c1eye.server.core.enumeration.OrderStatus;
 import com.c1eye.server.model.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -30,4 +31,14 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             Long userId, Integer status, Pageable pageable);
 
     Optional<Order> findFirstByUserIdAndId(Long uid, Long oid);
+
+    Optional<Order> findFirstByOrderNo(String orderNo);
+
+    @Modifying
+    @Query("update Order o set o.status=:status where o.orderNo=:orderNo")
+    int updateStatusByOrderNo(String orderNo, Integer status);
+
+    @Modifying
+    @Query("update Order o set o.status = 5 where o.status = 1 and o.id=:oid")
+    int cancelOrder(Long oid);
 }
